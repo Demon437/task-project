@@ -19,7 +19,7 @@ const Dashboard = () => {
         try {
             setLoading(true);
             const res = await axios.get(`${API_URL}/api/tasks`, {
-                headers: { Authorization: token }
+                headers: { Authorization: `Bearer ${token}` }
             });
             setTasks(res.data);
         } catch {
