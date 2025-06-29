@@ -1,30 +1,80 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import React, { useState } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import Dashboard from './pages/Dashboard';
+const LoginPage = ({ setToken }) => {
+    const [form, setForm] = useState({ email: '', password: '' });
+    const navigate = useNavigate();
 
-function App() {
-    const token = localStorage.getItem('token');
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, form);
+            localStorage.setItem('token', res.data.token);
+            setToken(res.data.token); // 🔁 update App state
+            toast.success('Login successful!');
+            navigate('/dashboard');
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Invalid credentials');
+        }
+    };
 
     return (
-        <BrowserRouter>
-            <Toaster position="top-right" />
-            <Routes>
-                <Route path="/" element={<Navigate to="/login" />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route
-                    path="/dashboard"
-                    element={
-                        token ? <Dashboard /> : <Navigate to="/login" />
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
+        <div className="container d-flex align-items-center justify-content-center min-vh-100 bg-light">
+            <div className="card shadow p-4 w-100" style={{ maxWidth: '400px' }}>
+                <h2 className="text-center mb-4">Welcome Back</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">Email address</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="email"
+                            name="email"
+                            value={form.email}
+                            onChange={handleChange}
+                            required
+                            placeholder="you@example.com"
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            name="password"
+                            value={form.password}
+                            onChange={handleChange}
+                            required
+                            placeholder="••••••••"
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-success w-100 mb-2">
+                        Login
+                    </button>
+                    <div className="text-center">
+                        <small>
+                            Don’t have an account?{' '}
+                            <span
+                                role="button"
+                                className="text-primary text-decoration-underline"
+                                onClick={() => navigate('/register')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                Register
+                            </span>
+                        </small>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
-}
+};
 
-export default App;
+export default LoginPage;
