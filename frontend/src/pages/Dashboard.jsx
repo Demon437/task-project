@@ -13,11 +13,12 @@ const Dashboard = () => {
     const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
     const token = localStorage.getItem('token');
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const fetchTasks = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks`, {
+            const res = await axios.get(`${API_URL}/api/tasks`, {
                 headers: { Authorization: token }
             });
             setTasks(res.data);
@@ -41,12 +42,12 @@ const Dashboard = () => {
         e.preventDefault();
         try {
             if (editingId) {
-                await axios.patch(`${process.env.REACT_APP_API_URL}/api/tasks/${editingId}`, form, {
+                await axios.patch(`${API_URL}/api/tasks/${editingId}`, form, {
                     headers: { Authorization: token }
                 });
                 toast.success('Task updated!');
             } else {
-                await axios.post(`${process.env.REACT_APP_API_URL}/api/tasks`, form, {
+                await axios.post(`${API_URL}/api/tasks`, form, {
                     headers: { Authorization: token }
                 });
                 toast.success('Task added!');
@@ -63,7 +64,7 @@ const Dashboard = () => {
 
     const deleteTask = async (id) => {
         try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`, {
+            await axios.delete(`${API_URL}/api/tasks/${id}`, {
                 headers: { Authorization: token }
             });
             toast.success('Task deleted!');
@@ -75,7 +76,7 @@ const Dashboard = () => {
 
     const updateStatus = async (id, newStatus) => {
         try {
-            await axios.patch(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`, { status: newStatus }, {
+            await axios.patch(`${API_URL}/api/tasks/${id}`, { status: newStatus }, {
                 headers: { Authorization: token }
             });
             toast.success('Status updated');
@@ -128,6 +129,7 @@ const Dashboard = () => {
 
     return (
         <div className={`container py-5 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+            {/* ---- same UI below ---- */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="mb-0">📋 Task Dashboard</h2>
                 <button className="btn btn-sm btn-outline-secondary" onClick={() => setDarkMode(!darkMode)}>
@@ -146,7 +148,6 @@ const Dashboard = () => {
                 >
                     {showForm ? 'Cancel' : '📝 Add Task'}
                 </button>
-
 
                 <input
                     type="text"
