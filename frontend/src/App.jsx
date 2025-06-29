@@ -7,16 +7,20 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 
 function App() {
-    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // Optional: Update token if localStorage changes
     useEffect(() => {
-        const syncToken = () => {
-            setToken(localStorage.getItem('token'));
-        };
-        window.addEventListener('storage', syncToken);
-        return () => window.removeEventListener('storage', syncToken);
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+        }
+        setLoading(false); // ✅ Token check done
     }, []);
+
+    if (loading) {
+        return <div className="text-center mt-5">Loading...</div>;
+    }
 
     return (
         <BrowserRouter>
