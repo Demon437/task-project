@@ -3,7 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ setToken }) => {
     const [form, setForm] = useState({ email: '', password: '' });
     const navigate = useNavigate();
 
@@ -16,6 +16,7 @@ const LoginPage = () => {
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, form);
             localStorage.setItem('token', res.data.token);
+            setToken(res.data.token); // 🔁 update App state
             toast.success('Login successful!');
             navigate('/dashboard');
         } catch (err) {
@@ -69,7 +70,6 @@ const LoginPage = () => {
                                 Register
                             </span>
                         </small>
-
                     </div>
                 </form>
             </div>
