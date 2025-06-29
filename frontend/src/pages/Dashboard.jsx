@@ -13,7 +13,7 @@ const Dashboard = () => {
     const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
     const token = localStorage.getItem('token');
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = 'https://task-project-9p3c.onrender.com';
 
     const fetchTasks = async () => {
         try {
@@ -129,7 +129,6 @@ const Dashboard = () => {
 
     return (
         <div className={`container py-5 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-            {/* ---- same UI below ---- */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="mb-0">📋 Task Dashboard</h2>
                 <button className="btn btn-sm btn-outline-secondary" onClick={() => setDarkMode(!darkMode)}>
