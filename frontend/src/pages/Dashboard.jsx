@@ -43,12 +43,12 @@ const Dashboard = () => {
         try {
             if (editingId) {
                 await axios.patch(`${API_URL}/api/tasks/${editingId}`, form, {
-                    headers: { Authorization: token }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
                 toast.success('Task updated!');
             } else {
                 await axios.post(`${API_URL}/api/tasks`, form, {
-                    headers: { Authorization: token }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
                 toast.success('Task added!');
             }
@@ -65,7 +65,7 @@ const Dashboard = () => {
     const deleteTask = async (id) => {
         try {
             await axios.delete(`${API_URL}/api/tasks/${id}`, {
-                headers: { Authorization: token }
+                headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('Task deleted!');
             fetchTasks();
@@ -77,7 +77,7 @@ const Dashboard = () => {
     const updateStatus = async (id, newStatus) => {
         try {
             await axios.patch(`${API_URL}/api/tasks/${id}`, { status: newStatus }, {
-                headers: { Authorization: token }
+                headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('Status updated');
             fetchTasks();
